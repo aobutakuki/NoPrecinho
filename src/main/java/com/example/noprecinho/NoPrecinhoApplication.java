@@ -10,7 +10,11 @@ public class NoPrecinhoApplication {
         SpringApplication.run(NoPrecinhoApplication.class, args);
 
         WebScraper webScraper = new WebScraper();
-        webScraper.connect("saojosedoscampos", "164607-alimento-yakult-hiline-f-frasco-100ml.html");
+        String document;
+        document = webScraper.tauste_connect("saojosedoscampos", "164607-alimento-yakult-hiline-f-frasco-100ml.html");
+
+        ContentAnalysis contentAnalysis = new ContentAnalysis();
+        contentAnalysis.tauste_price(document, "Yakult Hiline");
     }
 
 

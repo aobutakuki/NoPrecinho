@@ -7,44 +7,31 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 public class WebScraper {
 
-    public String connect(String region, String item) {
-        URL base_tausteURL;
-        String document;
-        {
-            try {
-                base_tausteURL = new URL("https://tauste.com.br/" + region + "/" + item);
-
-                System.out.println("Attempting connection to: " + base_tausteURL);
-
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        HttpURLConnection tauste_connection = null;
+    public String tauste_connect(String region, String item) {
         try {
-            tauste_connection = (HttpURLConnection) base_tausteURL.openConnection();
-            tauste_connection.setRequestMethod("GET");
+            // 1. Construct the full URL as a string
+            String url = "https://tauste.com.br/" + region + "/" + item;
+            System.out.println("Attempting connection to: " + url);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(tauste_connection.getInputStream()));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-            document = builder.toString();
+            // 2. Use Jsoup to connect, set the User-Agent, and get the document
+            Document doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                            "Chrome/58.0.3029.110 Safari/537.36")
+                    .followRedirects(false)
+                    .get();
 
-            return document;
-
+            // 3. Return the entire HTML content as a String
+            return doc.outerHtml();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (tauste_connection != null) {
-                tauste_connection.disconnect();
-            }
+            // Jsoup throws an IOException on failure, which is cleaner to catch
+            throw new RuntimeException("Failed to connect to Tauste: " + e.getMessage(), e);
         }
     }
 }
