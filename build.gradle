@@ -21,6 +21,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.11.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.5.3'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.jsoup:jsoup:1.17.2'
     runtimeOnly 'org.postgresql:postgresql'
