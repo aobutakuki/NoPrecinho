@@ -28,6 +28,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WebScraper {
 
+
+    //BASIC HTML
     public String tauste_connect(String region, String item) {
         try {
             // 1. Construct the full URL as a string
@@ -49,8 +51,30 @@ public class WebScraper {
             throw new RuntimeException("Failed to connect to Tauste: " + e.getMessage(), e);
         }
     }
-    private  WebDriver driver;
 
+
+
+
+    //FOR JAVASCRIPT PAGES
+    private  WebDriver driver;
+    public WebScraper(){
+        setupBrowser();
+    }
+
+    public void setupBrowser() {
+        if (driver == null) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless=new");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1200");
+            options.addArguments("--ignore-certificate-errors");
+            options.addArguments("--disable-blink-features=AutomationControlled");
+            options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+            this.driver = new ChromeDriver(options);
+        }
+    }
     public void closeConnection() {
         if(driver != null) {
             driver.quit();
@@ -70,18 +94,6 @@ public class WebScraper {
     }
     public String carrefour_connect(String item) {
             String url = "https://mercado.carrefour.com.br/" + item + "/p";
-
-            //Setup Selenium driver
-            WebDriverManager.chromedriver().setup();
-
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--window-size=1920,1200");
-            options.addArguments("--ignore-certificate-errors");
-            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
-
-            this.driver = new ChromeDriver(options);
 
             try{
 
@@ -123,25 +135,40 @@ public class WebScraper {
             String url = "https://www.loja.shibata.com.br/produto" +  "/" + shibata_item;
             System.out.println("Attempting connection to: " + url);
 
-            WebDriverManager.chromedriver().setup();
+            driver.get(url);
 
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--window-size=1920,1200");
-            options.addArguments("--ignore-certificate-errors");
-            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            try {
+                By cepInputSelector = By.cssSelector("input[placeholder='Digite seu CEP']");
+                WebElement cepInput = wait.until(ExpectedConditions.visibilityOfElementLocated(cepInputSelector));
 
-            this.driver = new ChromeDriver(options);
+                System.out.println("Location pop-up found. Entering CEP...");
+                cepInput.sendKeys("12246130");
 
-            Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+                By confirmButtonSelector = By.cssSelector("button.vip-button-raised");
+                driver.findElement(confirmButtonSelector).click();
+                System.out.println("CEP submitted.");
+
+                // **THE FIX**: Add a short, hard pause to allow the page to start its post-click loading.
+                Thread.sleep(1000); // Wait for 1 second
+
+            } catch (TimeoutException e) {
+                System.out.println("Location pop-up was not found, continuing...");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore the interrupted status
+            }
+
+
 
             String pageSource = driver.getPageSource();
+
+
             closeConnection();
             return pageSource;
 
         } catch (Exception e) {
             // Jsoup throws an IOException on failure, which is cleaner to catch
+            saveScreenshot("shibata_screenshot.png");
             closeConnection();
             throw new RuntimeException("Failed to connect to Shibata: " + e.getMessage(), e);
 
