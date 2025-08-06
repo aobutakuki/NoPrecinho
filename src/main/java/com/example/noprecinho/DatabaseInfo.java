@@ -1,18 +1,27 @@
 package com.example.noprecinho;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "product_listings")
 public class DatabaseInfo {
 
     //Listings Table
     @Id
-    @Column(name = "item_id")
-    public Long item_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "listing_id")
+    public Long listing_id;
+
+
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private ItemsDatabase itemsDatabase;
+
+
+    @Column(name = "supermarket_id")
+    public Long supermarket_id;
 
     @Column(name = "store_specific_name")
     public String item_url;
@@ -27,6 +36,10 @@ public class DatabaseInfo {
         return item_url;
     }
 
+    public Long getSupermarket_id() {
+        return supermarket_id;
+    }
+
     public Double getItem_price() {
         return item_price;
     }
@@ -39,8 +52,20 @@ public class DatabaseInfo {
         return is_availiable;
     }
 
-    public Long getItem_id() {
-        return item_id;
+    public void setItemAvailable(Boolean is_availiable) {
+        this.is_availiable = is_availiable;
     }
 
+    public ItemsDatabase getItemsDatabase() {
+        return itemsDatabase;
+    }
+
+    public Long getListing_id() {
+        return listing_id;
+    }
+
+
+
 }
+
+

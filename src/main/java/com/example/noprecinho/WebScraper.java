@@ -58,7 +58,7 @@ public class WebScraper {
     //FOR JAVASCRIPT PAGES
     private  WebDriver driver;
     public WebScraper(){
-        setupBrowser();
+        //setupBrowser();
     }
 
     public void setupBrowser() {
@@ -93,7 +93,10 @@ public class WebScraper {
         }
     }
     public String carrefour_connect(String item) {
-            String url = "https://mercado.carrefour.com.br/" + item + "/p";
+        setupBrowser();
+            String url = "https://mercado.carrefour.com.br/" + item;
+
+        System.out.println("Attempting connection to: " + url);
 
             try{
 
@@ -116,7 +119,7 @@ public class WebScraper {
                 String pageSource = driver.getPageSource();
 
 
-                closeConnection();
+
                 return pageSource;
 
 
@@ -130,6 +133,7 @@ public class WebScraper {
     }
 
     public String shibata_connect(String shibata_item) {
+        setupBrowser();
         try {
             // 1. Construct the full URL as a string
             String url = "https://www.loja.shibata.com.br/produto" +  "/" + shibata_item;
@@ -163,7 +167,7 @@ public class WebScraper {
             String pageSource = driver.getPageSource();
 
 
-            closeConnection();
+
             return pageSource;
 
         } catch (Exception e) {
