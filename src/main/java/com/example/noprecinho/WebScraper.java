@@ -34,7 +34,7 @@ public class WebScraper {
         try {
             // 1. Construct the full URL as a string
             String url = "https://tauste.com.br/" + region + "/" + item;
-            System.out.println("Attempting connection to: " + url);
+            System.out.println("[WebScraper] Attempting connection to: " + url);
 
             // 2. Use Jsoup to connect, set the User-Agent, and get the document
             Document doc = Jsoup.connect(url)
@@ -48,7 +48,7 @@ public class WebScraper {
 
         } catch (IOException e) {
             // Jsoup throws an IOException on failure, which is cleaner to catch
-            throw new RuntimeException("Failed to connect to Tauste: " + e.getMessage(), e);
+            throw new RuntimeException("[WebScraper] Failed to connect to Tauste: " + e.getMessage(), e);
         }
     }
 
@@ -86,9 +86,9 @@ public class WebScraper {
             File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             try {
                 FileUtils.copyFile(screenshotFile, new File(fileName));
-                System.out.println("Screenshot saved to " + fileName);
+                System.out.println("[WebScraper] Screenshot saved to " + fileName);
             } catch (IOException ioException) {
-                System.err.println("Failed to save screenshot: " + ioException.getMessage());
+                System.err.println("[WebScraper] Failed to save screenshot: " + ioException.getMessage());
             }
         }
     }
@@ -96,7 +96,7 @@ public class WebScraper {
         setupBrowser();
             String url = "https://mercado.carrefour.com.br/" + item;
 
-        System.out.println("Attempting connection to: " + url);
+        System.out.println("[WebScraper] Attempting connection to: " + url);
 
             try{
 
@@ -109,10 +109,10 @@ public class WebScraper {
                     // This XPath looks for a button that contains the text "Aceitar Cookies".
                     By cookieButtonSelector = By.xpath("//button[contains(text(), 'Aceitar Cookies')]");
                     wait.until(ExpectedConditions.elementToBeClickable(cookieButtonSelector)).click();
-                    System.out.println("Successfully clicked the cookie consent button.");
+                    System.out.println("[WebScraper] Successfully clicked the cookie consent button.");
                 } catch (TimeoutException e) {
                     // If the button doesn't appear, that's fine. We can continue.
-                    System.out.println("Cookie consent button not found or not needed.");
+                    System.out.println("[WebScraper] Cookie consent button not found or not needed.");
                 }
 
                 // 3. Once the element is present, get the final, fully-rendered page source.
@@ -127,7 +127,7 @@ public class WebScraper {
             //Gets Exception
                 saveScreenshot("screenshot.png");
             closeConnection();
-            throw new RuntimeException("Failed to connect to Carrefour: " + e.getMessage(), e);
+            throw new RuntimeException("[WebScraper] Failed to connect to Carrefour: " + e.getMessage(), e);
         }
 
     }
@@ -137,7 +137,7 @@ public class WebScraper {
         try {
             // 1. Construct the full URL as a string
             String url = "https://www.loja.shibata.com.br/produto" +  "/" + shibata_item;
-            System.out.println("Attempting connection to: " + url);
+            System.out.println("[WebScraper] Attempting connection to: " + url);
 
             driver.get(url);
 
@@ -146,18 +146,18 @@ public class WebScraper {
                 By cepInputSelector = By.cssSelector("input[placeholder='Digite seu CEP']");
                 WebElement cepInput = wait.until(ExpectedConditions.visibilityOfElementLocated(cepInputSelector));
 
-                System.out.println("Location pop-up found. Entering CEP...");
+                System.out.println("[WebScraper] Location pop-up found. Entering CEP...");
                 cepInput.sendKeys("12246130");
 
                 By confirmButtonSelector = By.cssSelector("button.vip-button-raised");
                 driver.findElement(confirmButtonSelector).click();
-                System.out.println("CEP submitted.");
+                System.out.println("[WebScraper] CEP submitted.");
 
                 // **THE FIX**: Add a short, hard pause to allow the page to start its post-click loading.
                 Thread.sleep(1000); // Wait for 1 second
 
             } catch (TimeoutException e) {
-                System.out.println("Location pop-up was not found, continuing...");
+                System.out.println("[WebScraper] Location pop-up was not found, continuing...");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Restore the interrupted status
             }
@@ -174,7 +174,7 @@ public class WebScraper {
             // Jsoup throws an IOException on failure, which is cleaner to catch
             saveScreenshot("shibata_screenshot.png");
             closeConnection();
-            throw new RuntimeException("Failed to connect to Shibata: " + e.getMessage(), e);
+            throw new RuntimeException("[WebScraper] Failed to connect to Shibata: " + e.getMessage(), e);
 
         }
     }

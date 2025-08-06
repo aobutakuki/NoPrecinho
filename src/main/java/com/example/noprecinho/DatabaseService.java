@@ -18,13 +18,13 @@ public class DatabaseService {
     public String getURLbyId(Long listing_id){
 
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getItem_url()).
-                orElseThrow(() -> new RuntimeException("Entry not found with id: " + listing_id));
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
 
     }
 
     public Double getPricebyId(Long listing_id){
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getItem_price()).
-                orElseThrow(() -> new RuntimeException("Entry not found with id: " + listing_id));
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
 
     public Integer getItemsCount(){
@@ -33,16 +33,16 @@ public class DatabaseService {
 
     public Boolean getAvailabilitybyId(Long listing_id){
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getIs_availiable()).
-                orElseThrow(() -> new RuntimeException("Entry not found with id: " + listing_id));
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
 
     public Long getSupermarketId(Long listing_id){
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getSupermarket_id()).
-                orElseThrow(() -> new RuntimeException("Entry not found with id: " + listing_id));
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
     public String getItembyId(Long listing_id){
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getItemsDatabase().getItem_name()).
-                orElseThrow(() -> new RuntimeException("Entry not found with id: " + listing_id));
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
 
     @Transactional
@@ -52,10 +52,10 @@ public class DatabaseService {
             databaseInfo.setItem_price(price);
             databaseRepository.save(databaseInfo);
         }catch (Exception e){
-            log.error("Error updating item price: " + e.getMessage());
-            throw new RuntimeException("Error updating item price: " + e.getMessage());
+            log.error("[DatabaseService] Error updating item price: " + e.getMessage());
+            throw new RuntimeException("[DatabaseService] Error updating item price: " + e.getMessage());
         }finally {
-            log.info("Item price updated successfully");
+            log.info("[DatabaseService] Item price updated successfully");
         }
     }
 
@@ -66,23 +66,23 @@ public class DatabaseService {
             databaseInfo.setItemAvailable(false);
             databaseRepository.save(databaseInfo);
         }catch (Exception e){
-            log.error("Error updating item availability: " + e.getMessage());
-            throw new RuntimeException("Error updating item availability: " + e.getMessage());
+            log.error("[DatabaseService] Error updating item availability: " + e.getMessage());
+            throw new RuntimeException("[DatabaseService] Error updating item availability: " + e.getMessage());
         }finally {
-            log.info("Item availability updated successfully");
+            log.info("[DatabaseService] Item availability updated successfully");
         }
 
     }
 
     public Boolean testConnection() {
-        System.out.println("testing connection to database...\n");
+        System.out.println("[DatabaseService] Testing connection to database...\n");
         try {
             // Simply try to execute a query. If it fails, an exception will be thrown.
             databaseRepository.count();
-            log.info("Connection to database successful");
+            log.info("[DatabaseService] Connection to database successful");
             return true;
         } catch (Exception e) {
-            log.error("Connection to database failed: " + e.getMessage());
+            log.error("[DatabaseService] Connection to database failed: " + e.getMessage());
             return false;
         }
     }
