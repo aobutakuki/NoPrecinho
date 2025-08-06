@@ -17,17 +17,17 @@ public class ContentAnalysis {
         //System.out.println("document : " + document);
 
         boolean contains_item = containsItemName(document, item_base_name);
-        System.out.println("contains_item : " + contains_item);
+        System.out.println("[ContentAnalysis:] contains_item : " + contains_item);
 
         boolean contains_price = document.contains("price");
-        System.out.println("contains_price : " + contains_price);
+        System.out.println("[ContentAnalysis:] contains_price : " + contains_price);
 
         if(contains_item && contains_price) {
             Element item_price;
             item_price = doc.select("meta[itemprop=price]").first(); //Select the first price meta tag
 
             price = item_price.attr("content");
-            System.out.println("price : " + price);
+            System.out.println("[ContentAnalysis:] price : " + price);
         }
         return price;
     }
@@ -39,10 +39,10 @@ public class ContentAnalysis {
         //System.out.println("document : " + document);
 
         boolean contains_item = containsItemName(document, item_base_name);
-        System.out.println("contains_item : " + contains_item);
+        System.out.println("[ContentAnalysis:] contains_item : " + contains_item);
 
         boolean contains_price = document.contains("price");
-        System.out.println("contains_price : " + contains_price);
+        System.out.println("[ContentAnalysis:] contains_price : " + contains_price);
 
         if(contains_item && contains_price) {
             Element item_price;
@@ -50,10 +50,10 @@ public class ContentAnalysis {
 
             if(item_price != null) {
                 price = item_price.text();
-                System.out.println("price : " + price);
+                System.out.println("[ContentAnalysis:] price : " + price);
             }
             else {
-                System.out.println("price is null == item not available");
+                System.out.println("[ContentAnalysis:] price is null == item not available");
             }
         }
         return price;
@@ -66,22 +66,22 @@ public class ContentAnalysis {
         //System.out.println("document : " + document);
 
         boolean contains_item = containsItemName(document, item_base_name);
-        System.out.println("contains_item : " + contains_item);
+        System.out.println("[ContentAnalysis:] contains_item : " + contains_item);
 
         boolean contains_price = document.contains("preco");
-        System.out.println("contains_price : " + contains_price);
+        System.out.println("[ContentAnalysis:] contains_price : " + contains_price);
 
         if(contains_item && contains_price) {
 
             Element priceSpan = doc.select("span[data-cy=preco]").first();
 
             String rawText = priceSpan.text();
-            System.out.println("Raw text found: " + rawText);
+            System.out.println("[ContentAnalysis:] Raw text found: " + rawText);
 
             // 3. Clean the text to get only the number
             // Replaces "R$ " and the non-breaking space (&nbsp;) with an empty string
             price = rawText.replace("R$", "").replace("\u00a0", "").trim();
-            System.out.println("Cleaned price: " + price);
+            System.out.println("[ContentAnalysis:] Cleaned price: " + price);
         }
         return price;
     }
