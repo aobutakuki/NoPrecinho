@@ -38,6 +38,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
          String document;
 
         for(int i = 1; i <= databaseService.getItemsCount(); i++){
+            System.out.println("---------------------");
             System.out.println("Entry number: @@@[ " + i + " ]@@@\n");
             if(databaseService.getAvailabilitybyId(Long.valueOf(i))){
 
@@ -96,6 +97,8 @@ public class NoPrecinhoApplication implements CommandLineRunner {
             else{
                 System.out.println("Item at " + i + " is not available");
             }
+
+            System.out.println("---------------------\n");
         }
 
         System.out.println(">>>>> Database updated ! >>>>>>>");
