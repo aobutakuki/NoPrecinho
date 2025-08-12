@@ -37,7 +37,11 @@
                     <ul>
                         <li th:each="listing : ${item.listings}" th:if="${listing.is_availiable}">
                             <span th:text="${listing.supermarket.supermarket_name}">Supermarket</span>:
-                            <span class="price" th:text="'R$ ' + ${listing.item_price}">R$ 0.00</span>
+
+                            <span class="price"
+                                  th:classappend="${listing.item_price == item.getLowestPrice()} ? 'lowest-price' : ''"
+                                  th:text="'R$ ' + ${listing.item_price}">R$ 0.00
+                            </span>
                         </li>
                     </ul>
                 </div>

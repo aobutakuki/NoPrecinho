@@ -1,3 +1,22 @@
+.listings-info-card{
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #04ac01;
+    border-radius: 10px;
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 20px;
+    display: flex;
+}
+
+.all-info h2{
+    justify-content: center;
+}
+
+
+
 /* The main container for all items */
 .item-grid {
     display: flex;
@@ -78,4 +97,9 @@
 .price-list li {
     margin-bottom: 5px;
     font-size: 14px;
+}
+
+.lowest-price {
+    font-weight: bold;
+    color: #04ac01;
 }

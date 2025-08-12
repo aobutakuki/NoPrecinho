@@ -86,9 +86,25 @@ public class ContentAnalysis {
         return price;
     }
 
-    public Double StringToDouble(String price){
-        Double price_double = Double.parseDouble(price);
-        return price_double;
+    public Double StringToDouble(String price) {
+        // Return null immediately if the input is bad to prevent errors
+        if (price == null || price.isBlank()) {
+            return null;
+        }
+
+        // Clean the string of ALL non-numeric characters before parsing
+        String cleanedPrice = price
+                .replace("R$", "")  // 1. Remove the currency symbol
+                .replace(",", ".")   // 2. Replace the comma with a period
+                .trim();              // 3. Remove any leading/trailing spaces
+
+        try {
+            // Now, parse the fully cleaned string
+            return Double.parseDouble(cleanedPrice);
+        } catch (NumberFormatException e) {
+            System.err.println("Could not parse cleaned price: '" + cleanedPrice + "'");
+            return null; // Return null if the cleaned string is still not a valid number
+        }
     }
 
     public Boolean containsItemName(String document, String item_name){

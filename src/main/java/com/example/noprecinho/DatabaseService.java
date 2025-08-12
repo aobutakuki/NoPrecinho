@@ -121,4 +121,8 @@ public class DatabaseService {
     public boolean itemExists(Long item_id){
         return itemsRepository.existsById(item_id);
     }
+
+    public List<DatabaseInfo> getAllListings() {
+        return databaseRepository.findAll();
+    }
 }
