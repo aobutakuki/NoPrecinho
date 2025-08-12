@@ -46,12 +46,17 @@ public class ItemsDatabase{
     }
 
     public double getLowestPrice() {
+
         if (listings == null || listings.isEmpty()) {
             return Double.MAX_VALUE; // Return a very high number if there are no listings
         }
 
+
         return listings.stream()
-                .filter(listing -> Objects.nonNull(listing.getIs_availiable()) && listing.getIs_availiable()) // Filter for available listings
+                // Filter for available listings
+                .filter(listing -> Objects.nonNull(listing.getIs_availiable()) && listing.getIs_availiable())
+                //Filer 2 make sure item price is not null
+                .filter(listing -> Objects.nonNull(listing.getItem_price()))
                 .mapToDouble(DatabaseInfo::getItem_price) // Get the price of each
                 .min() // Find the minimum price
                 .orElse(Double.MAX_VALUE); // Return a high number if no available listings are found
