@@ -38,9 +38,17 @@ public class NoPrecinhoApplication implements CommandLineRunner {
         for(int i = 1; i <= databaseService.getListingsCount(); i++){
             System.out.println("---------------------\n[Main_DB_Update]");
             System.out.println("Entry number: @@@[ " + i + " ]@@@\n");
+
+            //Check if listing at ID exists
+            if(!databaseService.itemExists(Long.valueOf(i))){
+                System.out.println("Item at " + i + " does not exist in database. Skipping update.");
+                continue;
+            }
+
+
             if(databaseService.getAvailabilitybyId(Long.valueOf(i))){
 
-
+                //If item is availiable get URL
                 System.out.println("Item at " + i + " is available");
                 String item_url = databaseService.getURLbyId(Long.valueOf(i));
 

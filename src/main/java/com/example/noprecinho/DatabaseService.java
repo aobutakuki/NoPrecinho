@@ -117,4 +117,8 @@ public class DatabaseService {
     public List<ItemsDatabase> getAllItems() {
         return itemsRepository.findAll();
     }
+
+    public boolean itemExists(Long item_id){
+        return itemsRepository.existsById(item_id);
+    }
 }
