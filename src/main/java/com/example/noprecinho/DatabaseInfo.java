@@ -19,9 +19,9 @@ public class DatabaseInfo {
     @JoinColumn(name = "item_id")
     private ItemsDatabase itemsDatabase;
 
-
-    @Column(name = "supermarket_id")
-    public Long supermarket_id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "supermarket_id")
+    private SupermarketInfo supermarket;
 
     @Column(name = "store_specific_name")
     public String item_url;
@@ -36,9 +36,7 @@ public class DatabaseInfo {
         return item_url;
     }
 
-    public Long getSupermarket_id() {
-        return supermarket_id;
-    }
+
 
     public Double getItem_price() {
         return item_price;
@@ -62,6 +60,14 @@ public class DatabaseInfo {
 
     public Long getListing_id() {
         return listing_id;
+    }
+
+    public SupermarketInfo getSupermarket() {
+        return supermarket;
+    }
+
+    public ItemsDatabase getItem(){
+        return itemsDatabase;
     }
 
 

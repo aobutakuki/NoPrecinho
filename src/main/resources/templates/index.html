@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>No Precinho</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+</head>
+<body>
+
+
+    <div class="all-info">
+
+        <div class="listings-info-card">
+
+            <h1 class="item-count" th:text="'Listings Count: ' + ${listingsCount}">Listings Count</h1>
+            <h1 class="item-count" th:text="'Items Count: ' + ${itemsCount}">Items Count</h1>
+        </div>
+
+        <h2>All Items</h2>
+
+        <div class="item-grid">
+
+            <div class="item-card" th:each="item : ${items}">
+
+                <div class="item-info">
+                    <img th:src="${item.image_link}" alt="Item Image" />
+
+                    <div class="item-details">
+                        <h3 th:text="${item.item_name}">Item Name</h3>
+                        <p class="item-id">ID: <span th:text="${item.item_id}">0</span></p>
+                        <h6 class="base-name"><span th:text="${item.base_name}">Base Name</span></h6>
+                    </div>
+                </div>
+
+                <div class="price-list">
+                    <h4>Prices:</h4>
+                    <ul>
+                        <li th:each="listing : ${item.listings}" th:if="${listing.is_availiable}">
+                            <span th:text="${listing.supermarket.supermarket_name}">Supermarket</span>:
+                            <span class="price" th:text="'R$ ' + ${listing.item_price}">R$ 0.00</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+    </div>
+
+
+
+
+</body>
+</html>

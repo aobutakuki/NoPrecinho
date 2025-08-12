@@ -5,12 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DatabaseService {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseService.class);
     @Autowired
     private DatabaseRepository databaseRepository;
+    @Autowired
+    private ItemsRepository itemsRepository;
+
     public DatabaseRepository getDatabaseRepository() {
         return databaseRepository;
     }
@@ -27,9 +32,11 @@ public class DatabaseService {
                 orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
 
-    public Integer getItemsCount(){
+    public Integer getListingsCount(){
         return (int) databaseRepository.count();
     }
+
+
 
     public Boolean getAvailabilitybyId(Long listing_id){
         return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getIs_availiable()).
@@ -37,7 +44,7 @@ public class DatabaseService {
     }
 
     public Long getSupermarketId(Long listing_id){
-        return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getSupermarket_id()).
+        return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getSupermarket().getSupermarket_id()).
                 orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
     public String getItembyId(Long listing_id){
@@ -87,5 +94,31 @@ public class DatabaseService {
         }
     }
 
+    //Items
+    public Integer getItemsCount(){return (int) itemsRepository.count();}
 
+    public String getItembyIdItems(Long item_id){
+        return itemsRepository.findById(item_id).map(itemsDatabase -> itemsDatabase.getItem_name()).
+                orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + item_id));
+    }
+
+    public String getBaseNamebyId(Long item_id){
+        return itemsRepository.findById(item_id).map(itemsDatabase -> itemsDatabase.getItem_base_name())
+                .orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + item_id));
+
+    }
+
+    public String getItemImagebyId(Long item_id){
+        return itemsRepository.findById(item_id).map(itemsDatabase -> itemsDatabase.getImage_link())
+                .orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + item_id));
+
+    }
+
+    public List<ItemsDatabase> getAllItems() {
+        return itemsRepository.findAll();
+    }
+
+    public boolean itemExists(Long item_id){
+        return itemsRepository.existsById(item_id);
+    }
 }
