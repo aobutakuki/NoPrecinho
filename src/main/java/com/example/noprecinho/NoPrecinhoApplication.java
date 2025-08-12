@@ -5,6 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 @SpringBootApplication
 public class NoPrecinhoApplication implements CommandLineRunner {
 
@@ -22,7 +24,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if(databaseService.testConnection()){
-            //update_db(databaseService);
+            update_db(databaseService);
 
         }
     }
@@ -34,83 +36,86 @@ public class NoPrecinhoApplication implements CommandLineRunner {
          WebScraper webScraper = new WebScraper();
          ContentAnalysis contentAnalysis = new ContentAnalysis();
          String document;
+         //Fetch the list of ALL actual listings from the database first.
+         List<DatabaseInfo> allListings = databaseService.getAllListings();
 
-        for(int i = 1; i <= databaseService.getListingsCount(); i++){
-            System.out.println("---------------------\n[Main_DB_Update]");
-            System.out.println("Entry number: @@@[ " + i + " ]@@@\n");
+         long totalStartTime = System.nanoTime(); //Total time
+            int count = 0;
+         //Loop through the collection of real listing objects.
+         for (DatabaseInfo listing : allListings) {
 
-            //Check if listing at ID exists
-            if(!databaseService.itemExists(Long.valueOf(i))){
-                System.out.println("Item at " + i + " does not exist in database. Skipping update.");
-                continue;
-            }
+             long startTime = System.nanoTime(); // Resets time to measure each loop
+
+             System.out.println("---------------------\n[Main_DB_Update]");
+             System.out.println("Processing listing ID: @@@[ " + listing.getListing_id() + " ] @@@\n");
+
+             System.out.println("[COUNT] Item: " + (++count) + " | " + allListings.size() + "\n");
+
+             // 3. Use the 'listing' object directly instead of looking up by 'i'.
+             if (listing.getIs_availiable()) {
+                 System.out.println("Item at listing ID " + listing.getListing_id() + " is available");
+                 String item_url = listing.getItem_url();
+                 String item_name = listing.getItem().getItem_name(); // Get data from the related item
+
+                 System.out.println("Item URL: " + item_url);
+                 System.out.println("Item name: " + item_name);
+
+                 String price = null;
+                 if (listing.getSupermarket().getSupermarket_id() == 1) {
+                     document = webScraper.tauste_connect("saojosedoscampos", item_url);
+                     price = contentAnalysis.tauste_price(document, item_name);
+                 }
+                 if (listing.getSupermarket().getSupermarket_id() == 2) {
+                     document = webScraper.carrefour_connect(item_url);
+                     price = contentAnalysis.carrefour_price(document, item_name);
+                 }
+                 if (listing.getSupermarket().getSupermarket_id() == 3) {
+                     document = webScraper.shibata_connect(item_url);
+                     price = contentAnalysis.shibata_price(document, item_name);
+                 }
+
+                 System.out.println("\n@@ Item price: " + price +
+                         "| Supermarket ID: " + listing.getSupermarket().getSupermarket_id() + " @\n");
+
+                 System.out.println("Updating item price...\n");
+                 if (price != null && !price.isBlank()) {
+                     Double priceDouble = contentAnalysis.StringToDouble(price);
+
+                     if (priceDouble != null) {
+                         databaseService.updateItemPrice(listing.getListing_id(), priceDouble);
+                     }
+                 } else {
+                     System.out.println("--> Price not found for item: " + item_name + ". Skipping update.");
+                     databaseService.updateItemAvailability(listing.getListing_id(), false);
+                 }
+             } else {
+                 System.out.println("Item at listing ID " + listing.getListing_id() + " is not available");
+             }
+
+             long endTime = System.nanoTime();
+             long durationMs = (endTime - startTime) / 1_000_000; //Convert from nano to actual time
 
 
-            if(databaseService.getAvailabilitybyId(Long.valueOf(i))){
-
-                //If item is availiable get URL
-                System.out.println("Item at " + i + " is available");
-                String item_url = databaseService.getURLbyId(Long.valueOf(i));
+             System.out.println("[CLOCK] Time Elapased: " + durationMs + " ms\n");
 
 
-                System.out.println("Item URL: " + item_url);
-                System.out.println("Item name: " + databaseService.getItembyId(Long.valueOf(i)));
+             System.out.println("---------------------\n");
+         }
 
+         System.out.println(">>>>> Database updated ! >>>>>>>");
 
-                String price = null;
-               if(databaseService.getSupermarketId(Long.valueOf(i)) == 1){
+         long totalEndTime = System.nanoTime();
+         long totalDurationSec = (totalEndTime - totalStartTime) / 1_000_000_000;
 
-                   document = webScraper.tauste_connect("saojosedoscampos",item_url);
-                   price = contentAnalysis.tauste_price(document, databaseService.getItembyId(Long.valueOf(i)));
+         System.out.println("[CLOCK] Total Time (Seconds): " + totalDurationSec + " s\n");
+         System.out.println("[CLOCK] Total Time (Minutes): " + (totalDurationSec / 60 ) + " min\n");
 
-               }
-               if(databaseService.getSupermarketId(Long.valueOf(i)) == 2){
+         webScraper.closeConnection();
+     }
 
-                   document = webScraper.carrefour_connect(item_url);
-                   price = contentAnalysis.carrefour_price(document, databaseService.getItembyId(Long.valueOf(i)));
-
-               }
-               if(databaseService.getSupermarketId(Long.valueOf(i)) == 3){
-
-                   document = webScraper.shibata_connect(item_url);
-                   price = contentAnalysis.shibata_price(document, databaseService.getItembyId(Long.valueOf(i)));
-
-               }
-
-                System.out.println("\n@@ Item price: " + price +
-                        "| Supermarket ID: " + databaseService.getSupermarketId(Long.valueOf(i)) + " @\n");
-
-                System.out.println("Updating item price...\n");
-                if (price != null && !price.isBlank()) {
-                    //Add this for parsable format
-                    String parsablePrice = price.replace("R$", "")  // 1. Remove the currency symbol
-                            .replace(",", ".")   // 2. Replace the comma with a period
-                            .trim();              // 3. Remove any leading/trailing spaces
-
-                    //Parse Price to Double
-                    Double priceDouble = contentAnalysis.StringToDouble(parsablePrice);
-
-
-
-                    //safely use priceDouble to update database
-                    databaseService.updateItemPrice(Long.valueOf(i), priceDouble);
-                } else {
-                    // Log an error or a warning and continue to the next item
-                    System.out.println("--> Price not found for item: " + databaseService.getItembyId(Long.valueOf(i)) + ". Skipping update.");
-                    databaseService.updateItemAvailability(Long.valueOf(i), false);
-                }
-            }
-            else{
-                System.out.println("Item at " + i + " is not available");
-            }
-
-            System.out.println("---------------------\n");
-        }
-
-        System.out.println(">>>>> Database updated ! >>>>>>>");
-        webScraper.closeConnection();
-
-    }
 
 
 }
+
+
+
