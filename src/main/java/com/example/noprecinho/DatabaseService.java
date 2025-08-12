@@ -44,7 +44,7 @@ public class DatabaseService {
     }
 
     public Long getSupermarketId(Long listing_id){
-        return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getSupermarket_id()).
+        return databaseRepository.findById(listing_id).map(databaseInfo -> databaseInfo.getSupermarket().getSupermarket_id()).
                 orElseThrow(() -> new RuntimeException("[DatabaseService] Entry not found with id: " + listing_id));
     }
     public String getItembyId(Long listing_id){

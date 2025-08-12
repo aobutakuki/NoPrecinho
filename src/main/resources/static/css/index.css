@@ -1,37 +1,81 @@
-.item-grid{
-    width: 100%;
+/* The main container for all items */
+.item-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
 }
 
-.item-card{
-    padding: 10px;
+/* The card for a single item */
+.item-card {
+    display: flex; /* This creates the two-column layout for its children */
+    gap: 20px; /* Adds space between the two columns */
     margin: 10px;
-    width: 500px;
-    height: 220px;
+    padding: 15px;
+    width: 600px;
+    height: 200px;
     border: 1px solid #04ac01;
-    display: flex;
-
+    border-radius: 10px;
+    font-family: sans-serif;
 }
 
-.item-card img{
-    width: 175px;
-    height: 100%;
+/* COLUMN 1: Contains the image and text details */
+.item-info {
+    flex: 3; /* Makes this column take up 3 parts of the space */
+    display: flex; /* Puts the image and item-details side-by-side */
+    gap: 15px; /* Adds space between the image and the text */
+}
+
+.item-card img {
+    width: 150px;
+    height: 150px;
     object-fit: cover;
+    border-radius: 8px;
 }
 
-.item-card h3{
-    margin-left: 10px;
-    font-size: 24px;
+/* New container for just the text, to stack it vertically */
+.item-details {
+    display: flex;
+    flex-direction: column;
 }
 
-.item-card p{
-    margin-left: 10px;
-    font-size: 18px;
+.item-details h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
 }
 
-.item-id{
-    font-size: 10px !important;
+.item-details p, .item-details h6 {
+    margin: 2px 0;
+}
+
+.item-id {
+    font-size: 12px;
+    color: #555;
+}
+
+.base-name {
+    font-size: 10px; /* Made the base name small as requested */
+    color: #777;
+}
+
+
+/* COLUMN 2: Contains the price list */
+.price-list {
+    flex: 2; /* Makes this column take up 2 parts of the space */
+    border-left: 1px solid #eee; /* Adds a visual separator line */
+    padding-left: 20px;
+}
+
+.price-list h4 {
+    margin: 0 0 10px 0;
+}
+
+.price-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.price-list li {
+    margin-bottom: 5px;
+    font-size: 14px;
 }
