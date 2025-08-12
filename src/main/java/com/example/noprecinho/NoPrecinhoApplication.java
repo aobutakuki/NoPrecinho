@@ -16,7 +16,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(NoPrecinhoApplication.class, args);
-
+        //FIX ERROR TO CHECK FOR NULL ENTRIES IN DB, IF THERE IS NO ENTRY AT NUMBER X in THE LOOP THE PROGRAM WILL CRASH
     }
 
     //Logic here
@@ -24,7 +24,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if(databaseService.testConnection()){
-            update_db(databaseService);
+            //update_db(databaseService);
 
         }
     }
