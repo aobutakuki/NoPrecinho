@@ -79,3 +79,8 @@
     margin-bottom: 5px;
     font-size: 14px;
 }
+
+.lowest-price {
+    font-weight: bold;
+    color: #04ac01;
+}

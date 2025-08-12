@@ -7,12 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class HTMLController {
 
     @Autowired // Required to create an actual DB object instead of a java object
     private DatabaseService databaseService;
+
+    @Autowired
+    private ItemsRepository itemsRepository;
+
+
 
 
 
@@ -25,6 +31,7 @@ public class HTMLController {
         model.addAttribute("items", allItems);
         model.addAttribute("itemsCount", databaseService.getItemsCount());
         model.addAttribute("listingsCount", databaseService.getListingsCount());
+
 
         return "index";
     }
