@@ -1,0 +1,37 @@
+.item-grid{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-card{
+    padding: 10px;
+    margin: 10px;
+    width: 500px;
+    height: 220px;
+    border: 1px solid #04ac01;
+    display: flex;
+
+}
+
+.item-card img{
+    width: 175px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-card h3{
+    margin-left: 10px;
+    font-size: 24px;
+}
+
+.item-card p{
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.item-id{
+    font-size: 10px !important;
+}

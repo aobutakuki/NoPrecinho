@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>No Precinho</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 <body>
 
 
-    <div class="item-info">
+    <div class="all-info">
 
-        <div class="item-info-card">
+        <div class="listings-info-card">
 
-            <h1 class="item-count" th:text="'Item Count: ' + ${itemsCount}">Product Count</h1>
+            <h1 class="item-count" th:text="'Listings Count: ' + ${listingsCount}">Listings Count</h1>
+            <h1 class="item-count" th:text="'Items Count: ' + ${itemsCount}">Items Count</h1>
         </div>
+
+        <h2>All Items</h2>
+
+        <div class="item-grid">
+            <div class="item-card" th:each="item : ${items}">
+                <img th:src="${item.image_link}" alt="Item Image" width="150" />
+                <h3 th:text="${item.item_name}">Item Name</h3>
+                <p class="item-id">ID: <span th:text="${item.item_id}">0</span></p>
+            </div>
+        </div>
+
+
     </div>
 
 

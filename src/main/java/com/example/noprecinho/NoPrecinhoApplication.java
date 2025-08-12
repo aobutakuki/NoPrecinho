@@ -5,8 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.SQLOutput;
-
 @SpringBootApplication
 public class NoPrecinhoApplication implements CommandLineRunner {
 
@@ -37,7 +35,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
          ContentAnalysis contentAnalysis = new ContentAnalysis();
          String document;
 
-        for(int i = 1; i <= databaseService.getItemsCount(); i++){
+        for(int i = 1; i <= databaseService.getListingsCount(); i++){
             System.out.println("---------------------\n[Main_DB_Update]");
             System.out.println("Entry number: @@@[ " + i + " ]@@@\n");
             if(databaseService.getAvailabilitybyId(Long.valueOf(i))){
