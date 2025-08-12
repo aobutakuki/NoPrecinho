@@ -1,0 +1,43 @@
+<head th:fragment="head">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta content="ie=edge" http-equiv="x-ua-compatible" />
+    <title></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body th:fragment="body">
+<div class="nav-bar">
+    <div class="row">
+
+        <div class="col-3">
+            <div class="nav-link">
+                <a href="/"><span class="logo"><i class="fa fa-usd" aria-hidden="true"></i>No Precinho</span></a>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="nav-link">
+                <a href="/listings"><i class="fa fa-shopping-basket" aria-hidden="true"></i>Itens</a>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="nav-link">
+                <a href="/items"><i class="fa fa-list" aria-hidden="true"></i>Lista</a>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="nav-link">
+                <a href="/user"><i class="fa fa-user-circle-o" aria-hidden="true"></i>Usuario</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>

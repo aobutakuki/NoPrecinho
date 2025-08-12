@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>No Precinho</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}"/>
-</head>
+<head th:include="fragments/header :: head"></head>
 <body>
 
-
+    <div th:include="fragments/header :: body"></div>
     <div class="all-info">
 
         <div class="listings-info-card">
 
-            <h1 class="item-count" th:text="'Listings Count: ' + ${listingsCount}">Listings Count</h1>
+            <h1 class="item-count" th:text="'Listings Count: ' + ${listingsCount}">Listings Count</h1>|
             <h1 class="item-count" th:text="'Items Count: ' + ${itemsCount}">Items Count</h1>
         </div>
 

@@ -1,0 +1,22 @@
+.nav-bar{
+    background-color: #04ac01;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-bar a{
+    color: white;
+    text-decoration: none;
+}
+
+.nav-bar a:hover{
+    color: #b5ecb4;
+    border-color: white;
+}
+
+.nav-bar i{
+    color: white;
+    font-size: 20px;
+}

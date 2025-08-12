@@ -24,7 +24,7 @@ public class NoPrecinhoApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if(databaseService.testConnection()){
-            update_db(databaseService);
+            //update_db(databaseService);
 
         }
     }
