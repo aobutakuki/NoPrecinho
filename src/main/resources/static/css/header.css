@@ -1,22 +1,47 @@
-.nav-bar{
+.nav-bar {
     background-color: #04ac01;
     color: white;
     font-size: 20px;
-    display: flex;
-    justify-content: space-between;
+
 }
 
-.nav-bar a{
+.nav-bar a {
     color: white;
     text-decoration: none;
 }
 
-.nav-bar a:hover{
+.nav-bar a:hover {
     color: #b5ecb4;
-    border-color: white;
 }
 
-.nav-bar i{
+.nav-bar i {
     color: white;
     font-size: 20px;
+}
+
+.row {
+
+
+    display: flex;
+    justify-content: space-between; /* This will now space out the .col-3 divs */
+    box-sizing: border-box;
+
+
+    align-items: center;
+    padding: 20px;
+    height: 60px;
+    margin-bottom: 10px;
+
+    overflow: hidden;
+    font-size: 20px;
+
+
+
+
+.col-3 {
+    text-align: center;
+}
+
+i{
+margin-right: 5px;}
 }
