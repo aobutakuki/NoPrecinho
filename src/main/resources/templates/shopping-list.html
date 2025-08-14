@@ -50,10 +50,17 @@
     <h2>Price Totals by Supermarket</h2>
     <ul>
       <li th:each="entry : ${supermarketPrices}">
-        Supermarket ID <span th:text="${entry.key}">1</span>:
+
+            <span th:classappend="${cheapestSupermarketId == entry.key} ? 'badge-cheapest' : ''"
+                  th:text="${supermarketMap.get(entry.key).supermarket_name}">
+            Supermarket Name
+            </span>
+
+        :
+
         <strong th:text="'R$ ' + ${#numbers.formatDecimal(entry.value, 1, 2)}">R$ 0.00</strong>
 
-        <span th:if="${cheapestSupermarketId == entry.key}" class="badge-cheapest">Cheapest!</span>
+
       </li>
     </ul>
 

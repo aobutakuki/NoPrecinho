@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
@@ -21,8 +22,8 @@ public class HTMLController {
     @Autowired
     private ItemsRepository itemsRepository;
 
-@Autowired
-private SupermarketRepository supermarketRepository;
+    @Autowired
+    private SupermarketRepository supermarketRepository;
 
 
 
@@ -48,7 +49,7 @@ private SupermarketRepository supermarketRepository;
         model.addAttribute("items", allItems);
         model.addAttribute("itemsCount", databaseService.getItemsCount());
         model.addAttribute("listingsCount", databaseService.getListingsCount());
-        model.addAttribute("supermarkets", databaseService.getAllSupermarkets());
+
 
 
         return "index";
@@ -83,7 +84,16 @@ private SupermarketRepository supermarketRepository;
                     model.addAttribute("cheapestSupermarketId", entry.getKey()));
         }
 
+        //Get list of all supermarkets
+        List<SupermarketInfo> allSupermarkets = databaseService.getAllSupermarkets();
+
+        //Map it to id
+        Map<Long, SupermarketInfo> supermarketMap = allSupermarkets.stream()
+                .collect(Collectors.toMap(SupermarketInfo::getSupermarket_id, Function.identity()));
+
+
         model.addAttribute("allItems", allItems);
+        model.addAttribute("supermarketMap", supermarketMap);
         return "shopping-list"; // 4. Return the name of your new HTML template
     }
 }

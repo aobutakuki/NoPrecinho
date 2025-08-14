@@ -7,3 +7,9 @@
     justify-content: center;
     align-items: center;
 }
+
+
+.badge-cheapest{
+    color: #04ac01;
+    font-weight: bold;
+}
