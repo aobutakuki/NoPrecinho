@@ -1,5 +1,6 @@
 package com.example.noprecinho;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ItemsDatabase{
     public String image_link;
 
     @OneToMany(mappedBy = "itemsDatabase", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<DatabaseInfo> listings;
 
     public Long getItem_id() {
@@ -60,5 +62,9 @@ public class ItemsDatabase{
                 .mapToDouble(DatabaseInfo::getItem_price) // Get the price of each
                 .min() // Find the minimum price
                 .orElse(Double.MAX_VALUE); // Return a high number if no available listings are found
+    }
+
+    public List<DatabaseInfo> getListingsbyItemId(Long item_id){
+        return listings.stream().filter(listing -> listing.getItemsDatabase().getItem_id() == item_id).toList();
     }
 }

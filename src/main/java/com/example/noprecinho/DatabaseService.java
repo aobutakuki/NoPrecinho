@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DatabaseService {
@@ -13,8 +15,12 @@ public class DatabaseService {
     private static final Logger log = LoggerFactory.getLogger(DatabaseService.class);
     @Autowired
     private DatabaseRepository databaseRepository;
+
     @Autowired
     private ItemsRepository itemsRepository;
+
+    @Autowired
+    private SupermarketRepository supermarketRepository;
 
     public DatabaseRepository getDatabaseRepository() {
         return databaseRepository;
@@ -125,4 +131,27 @@ public class DatabaseService {
     public List<DatabaseInfo> getAllListings() {
         return databaseRepository.findAll();
     }
+
+    public List<SupermarketInfo> getAllSupermarkets() {
+        return supermarketRepository.findAll();
+    }
+
+    public Map<Long, Double> findSupermarketPrices(List<Long> itemIds) {
+        Map<Long, Double> supermarketPrices = new HashMap<>();
+
+        // Ensure your repository method uses camelCase: findByItemsDatabaseItemIdIn
+        List<DatabaseInfo> relevantListings = databaseRepository.findListingsByItemIds(itemIds);
+
+        for (DatabaseInfo listing : relevantListings) {
+            if (listing.getItem_price() != null && listing.getIs_availiable()) {
+                supermarketPrices.merge(
+                        listing.getSupermarket().getSupermarket_id(),
+                        listing.getItem_price(),
+                        Double::sum
+                );
+            }
+        }
+        return supermarketPrices;
+    }
+
 }

@@ -42,13 +42,52 @@
                     </ul>
                 </div>
 
+
+                <div class="item-actions">
+                    <button class="add-button"
+                            th:classappend="${addedItemIds.contains(item.item_id)} ? 'added' : ''"
+                            th:disabled="${addedItemIds.contains(item.item_id)}"
+                            th:onclick="addItemToList(this, [[${item.item_id}]])">
+
+                        <i th:if="${addedItemIds.contains(item.item_id)}" class="fa fa-check" aria-hidden="true"></i>
+
+                        <i th:unless="${addedItemIds.contains(item.item_id)}" class="fa fa-plus-circle" aria-hidden="true"></i>
+                    </button>
+                </div>
+
             </div>
 
 
     </div>
 
 
+<script>
+    function addItemToList(buttonElement, itemId) {
+        // Use fetch to call your API endpoint in the background
+        fetch('/items/add?id=' + itemId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text(); // Parse the Text data from the response
+            })
+            .then(successMessage => {
+                // This code runs AFTER the server has responded and set the cookie
+                console.log('Sucess:', successMessage);
 
+                const iconElement = buttonElement.querySelector('i');
+                if (iconElement) {
+                    iconElement.classList.remove('fa-plus-circle'); // Remove the plus icon class
+                    iconElement.classList.add('fa-check');   // Add the checkmark icon class
+                }
+                buttonElement.classList.add('added');
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                alert('Failed to add item to list.');
+            });
+    }
+</script>
 
 </body>
 </html>

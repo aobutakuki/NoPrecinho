@@ -112,3 +112,17 @@
     font-weight: bold;
     color: #04ac01;
 }
+
+.item-actions i{
+
+    color: #04ac01;
+}
+
+.item-actions button{
+    border: none;
+    background: none;
+}
+.item-actions i:hover{
+    color: #baf6ba;
+
+}

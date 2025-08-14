@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+    <div th:include="fragments/header :: body"></div>
+
+<div class="shopping-list">
+
+  <h2>Shopping List</h2>
+
+  <div class="item-grid">
+
+    <div class="item-card" th:each="item : ${allItems}">
+
+      <div class="item-info">
+        <img th:src="${item.image_link}" alt="Item Image" />
+
+        <div class="item-details">
+          <h3 th:text="${item.item_name}">Item Name</h3>
+          <p class="item-id">ID: <span th:text="${item.item_id}">0</span></p>
+          <h6 class="base-name"><span th:text="${item.base_name}">Base Name</span></h6>
+        </div>
+      </div>
+
+      <div class="price-list">
+        <h4>Prices:</h4>
+        <ul>
+          <li th:each="listing : ${item.listings}" th:if="${listing.is_availiable}">
+            <span th:text="${listing.supermarket.supermarket_name}">Supermarket</span>:
+
+            <span class="price"
+                  th:classappend="${listing.item_price == item.getLowestPrice()} ? 'lowest-price' : ''"
+                  th:text="'R$ ' + ${listing.item_price}">R$ 0.00
+                            </span>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="item-actions">
+        <button th:onclick="addItemToList(this,[[${item.item_id}]])"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+      </div>
+
+    </div>
+
+    </div>
+
+  <div class="shopping-list-info">
+
+    <h2>Price Totals by Supermarket</h2>
+    <ul>
+      <li th:each="entry : ${supermarketPrices}">
+        Supermarket ID <span th:text="${entry.key}">1</span>:
+        <strong th:text="'R$ ' + ${#numbers.formatDecimal(entry.value, 1, 2)}">R$ 0.00</strong>
+
+        <span th:if="${cheapestSupermarketId == entry.key}" class="badge-cheapest">Cheapest!</span>
+      </li>
+    </ul>
+
+  </div>
+
+</div>
+
+</body>
+</html>

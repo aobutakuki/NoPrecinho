@@ -1,6 +1,8 @@
 package com.example.noprecinho;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -17,6 +19,7 @@ public class DatabaseInfo {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
+    @JsonBackReference
     private ItemsDatabase itemsDatabase;
 
     @ManyToOne(fetch = FetchType.EAGER)
