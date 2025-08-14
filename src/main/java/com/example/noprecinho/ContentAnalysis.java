@@ -14,7 +14,7 @@ public class ContentAnalysis {
         String price = null; //Set string to null to avoid null pointer exception
 
         Document doc = Jsoup.parse(document); //Parse document into Jsoup Document object
-        //System.out.println("document : " + document);
+        System.out.println("document : " + document);
 
         boolean contains_item = containsItemName(document, item_base_name);
         System.out.println("[ContentAnalysis:] contains_item : " + contains_item);
@@ -22,7 +22,7 @@ public class ContentAnalysis {
         boolean contains_price = document.contains("price");
         System.out.println("[ContentAnalysis:] contains_price : " + contains_price);
 
-        if(contains_item && contains_price) {
+        if(contains_price) {
             Element item_price;
             item_price = doc.select("meta[itemprop=price]").first(); //Select the first price meta tag
 
@@ -117,7 +117,9 @@ public class ContentAnalysis {
 
         // Optional but recommended: Remove punctuation for a cleaner match.
         // This regex leaves only letters, numbers, and spaces.
-        lowerCaseDoc = lowerCaseDoc.replaceAll("[^a-zA-Z0-9\\s]", "");
+        lowerCaseDoc = lowerCaseDoc.replaceAll("[^a-zA-Z0-9\\s]", "")
+                .replaceAll("-","").replaceAll("_","");
+
         lowerCaseItemName = lowerCaseItemName.replaceAll("[^a-zA-Z0-9\\s]", "");
 
         // 2. Now perform the check on the cleaned, lowercase strings.
