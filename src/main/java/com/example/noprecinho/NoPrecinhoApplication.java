@@ -5,7 +5,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class NoPrecinhoApplication implements CommandLineRunner {
@@ -13,6 +15,11 @@ public class NoPrecinhoApplication implements CommandLineRunner {
     @Autowired // Required to create an actual DB object instead of a java object
     private DatabaseService databaseService;
 
+    @Autowired // <-- ADD THIS to inject your ContentAnalysis bean
+    private ContentAnalysis contentAnalysis;
+
+    @Autowired
+    private TausteSpider tausteSpider;
 
     public static void main(String[] args) {
         SpringApplication.run(NoPrecinhoApplication.class, args);
@@ -25,6 +32,12 @@ public class NoPrecinhoApplication implements CommandLineRunner {
 
         if(databaseService.testConnection()){
             //update_db(databaseService);
+            Set<String> urlsToParse = new HashSet<>();
+
+
+            urlsToParse = tausteSpider.crawl();
+
+            contentAnalysis.tausteSpiderParse(urlsToParse);
 
         }
     }

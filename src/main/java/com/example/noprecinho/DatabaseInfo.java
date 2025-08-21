@@ -40,6 +40,25 @@ public class DatabaseInfo {
     }
 
 
+    public void setItem_url(String item_url) {
+            this.item_url = item_url;
+    }
+
+    public void setIs_availiable(Boolean is_availiable) {
+        this.is_availiable = is_availiable;
+    }
+
+    public void setItemsDatabase(ItemsDatabase itemsDatabase) {
+        this.itemsDatabase = itemsDatabase;
+    }
+
+    public void setSupermarket(SupermarketInfo supermarket) {
+        this.supermarket = supermarket;
+    }
+
+    public void setListing_id(Long listing_id) {
+        this.listing_id = listing_id;
+    }
 
     public Double getItem_price() {
         return item_price;

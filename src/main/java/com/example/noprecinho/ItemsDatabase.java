@@ -11,6 +11,7 @@ import java.util.Objects;
 public class ItemsDatabase{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     public Long item_id;
 
@@ -31,16 +32,32 @@ public class ItemsDatabase{
         return item_id;
     }
 
+    public void setItem_id(Long item_id) {
+        this.item_id = item_id;
+    }
+
     public String getItem_name() {
         return item_name;
+    }
+
+    public void setItem_name(String item_name) {
+        this.item_name = item_name;
     }
 
     public String getItem_base_name() {
         return base_name;
     }
 
+    public void setItem_base_name(String base_name) {
+        this.base_name = base_name;
+    }
+
     public String getImage_link() {
         return image_link;
+    }
+
+    public void setImage_link(String image_link) {
+        this.image_link = image_link;
     }
 
     public List<DatabaseInfo> getListings() {

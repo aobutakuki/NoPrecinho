@@ -94,6 +94,18 @@ public class HTMLController {
 
         model.addAttribute("allItems", allItems);
         model.addAttribute("supermarketMap", supermarketMap);
+
+        //Check if the cookie exists - IMPLEMENT FUNCTION NEXT
+        Set<Long> addedItemIds = Collections.emptySet(); // Default to an empty set
+        if (encodedItemIds != null) {
+            String decodedItemIds = URLDecoder.decode(encodedItemIds, StandardCharsets.UTF_8);
+            addedItemIds = Arrays.stream(decodedItemIds.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toSet());
+        }
+
+        // Add the set of IDs to the model
+        model.addAttribute("addedItemIds", addedItemIds);
         return "shopping-list"; // 4. Return the name of your new HTML template
     }
 }

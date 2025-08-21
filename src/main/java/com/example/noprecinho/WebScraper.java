@@ -24,8 +24,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class WebScraper {
 
 
@@ -102,7 +103,7 @@ public class WebScraper {
 
                 driver.get(url);
 
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
 
                 try {
                     // Wait for the cookie button to be clickable and then click it.
@@ -141,7 +142,7 @@ public class WebScraper {
 
             driver.get(url);
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
             try {
                 By cepInputSelector = By.cssSelector("input[placeholder='Digite seu CEP']");
                 WebElement cepInput = wait.until(ExpectedConditions.visibilityOfElementLocated(cepInputSelector));
@@ -177,5 +178,36 @@ public class WebScraper {
             throw new RuntimeException("[WebScraper] Failed to connect to Shibata: " + e.getMessage(), e);
 
         }
+    }
+
+    public String tausteScraper(String baseUrl){
+        setupBrowser();
+
+        try{
+            System.out.println("[WebScraper / TausteSpider] Attempting connection to: " + baseUrl);
+
+            driver.get(baseUrl);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
+
+            try {
+                By cepInputSelector = By.cssSelector("input[placeholder='Digite seu CEP']");
+                WebElement cepInput = wait.until(ExpectedConditions.visibilityOfElementLocated(cepInputSelector));
+
+                System.out.println("[WebScraper / TausteSpider] Location pop-up found. Entering CEP...");
+                cepInput.sendKeys("12246130");
+
+                By confirmButtonSelector = By.cssSelector("button.vip-button-raised");
+            }catch(TimeoutException e){
+                System.out.println("[WebScraper / TausteSpider] Location pop-up was not found, continuing...");
+            }
+
+            String pageSource = driver.getPageSource();
+            System.out.println("[WebScraper / TausteSpiter] Source Code Found!");
+            return pageSource;
+        }catch (Exception e){
+            System.out.printf("[WebScraper / TausteSpider] Failed to connect to Tauste: %s\n", e.getMessage());
+        }
+        closeConnection();
+        return null;
     }
 }

@@ -154,4 +154,56 @@ public class DatabaseService {
         return supermarketPrices;
     }
 
+    @Transactional
+    public void createItem(String item_name, String base_name, String image_link){
+
+
+        if (itemsRepository.existsByBase_name(base_name)) {
+            System.out.println("Item with base name '" + base_name + "' already exists. Skipping creation.");
+            return; // Stop the method here
+        }
+
+
+        ItemsDatabase newItem = new ItemsDatabase();
+
+        newItem.setItem_name(item_name);
+        newItem.setItem_base_name(base_name);
+        newItem.setImage_link(image_link);
+
+        // 3. Use the repository's save() method to persist it to the database
+        itemsRepository.save(newItem);
+
+        System.out.println("Successfully created new item: " + item_name);
+
+
+
+    }
+
+    @Transactional
+    public void createListing(String itemUrl, Double itemPrice, Boolean isAvailable, Long supermarketId, Long itemId) {
+        // 1. Find the related entities that already exist in the database
+        ItemsDatabase item = itemsRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemId));
+
+        SupermarketInfo supermarket = supermarketRepository.findById(supermarketId)
+                .orElseThrow(() -> new RuntimeException("Supermarket not found with ID: " + supermarketId));
+
+        // 2. Create a new instance of your listing entity
+        DatabaseInfo newListing = new DatabaseInfo();
+
+        // 3. Set the simple properties
+        newListing.setItem_url(itemUrl);
+        newListing.setItem_price(itemPrice);
+        newListing.setIs_availiable(isAvailable);
+
+        // 4. Set the relationships using the full objects you found
+        newListing.setItemsDatabase(item);
+        newListing.setSupermarket(supermarket);
+
+        // 5. Save the new listing. JPA handles the foreign keys automatically.
+        databaseRepository.save(newListing);
+
+        System.out.println("Successfully created new listing for item: " + item.getItem_name());
+    }
+
 }
