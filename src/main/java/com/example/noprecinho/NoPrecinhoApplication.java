@@ -1,5 +1,8 @@
 package com.example.noprecinho;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -7,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @SpringBootApplication
@@ -21,6 +25,9 @@ public class NoPrecinhoApplication implements CommandLineRunner {
     @Autowired
     private TausteSpider tausteSpider;
 
+    @Autowired
+    private ItemsRepository itemsRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(NoPrecinhoApplication.class, args);
         //FIX ERROR TO CHECK FOR TAUSTE (TEMP FIXED)
@@ -32,13 +39,10 @@ public class NoPrecinhoApplication implements CommandLineRunner {
 
         if(databaseService.testConnection()){
             //update_db(databaseService);
-            Set<String> urlsToParse = new HashSet<>();
-
-
-            urlsToParse = tausteSpider.crawl();
-
-            contentAnalysis.tausteSpiderParse(urlsToParse);
-
+           // Set<String> urlsToParse = new HashSet<>();
+            //urlsToParse = tausteSpider.crawl();
+            //contentAnalysis.tausteSpiderParse(urlsToParse);
+            //updateAllItemImages();
         }
     }
 
@@ -127,6 +131,59 @@ public class NoPrecinhoApplication implements CommandLineRunner {
          webScraper.closeConnection();
      }
 
+
+    public void updateAllItemImages() {
+        System.out.println("[UpdateService] Starting image update process...");
+        List<ItemsDatabase> allItems = itemsRepository.findAll();
+        int updatedCount = 0;
+
+        for (ItemsDatabase item : allItems) {
+            try {
+                // Find the Tauste-specific listing for this item (assuming Tauste ID is 1L)
+                Optional<DatabaseInfo> tausteListingOpt = item.getListings().stream()
+                        .filter(listing -> listing.getSupermarket().getSupermarket_id() == 1L)
+                        .findFirst();
+
+                if (tausteListingOpt.isPresent()) {
+                    DatabaseInfo tausteListing = tausteListingOpt.get();
+                    // Construct the full URL to scrape
+                    String productUrl = "https://tauste.com.br/saojosedoscampos/" + tausteListing.getItem_url();
+
+                    System.out.println("Checking item: " + item.getItem_name());
+
+                    // Use Jsoup to fetch and parse the product page
+                    Document doc = Jsoup.connect(productUrl)
+                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                                    "Chrome/58.0.3029.110 Safari/537.36")
+                            .followRedirects(false)
+                            .get();
+
+                    // Find the image URL from the <meta> tag
+                    Element imageMetaTag = doc.selectFirst("meta[property=og:image]");
+
+                    if (imageMetaTag != null) {
+                        String newImageLink = imageMetaTag.attr("content");
+                        String oldImageLink = item.getImage_link();
+
+                        // Check if the link is new and not empty
+                        if (newImageLink != null && !newImageLink.isBlank() && !newImageLink.equals(oldImageLink)) {
+                            item.setImage_link(newImageLink);
+                            itemsRepository.save(item);
+                            System.out.println("  -> UPDATED image for: " + item.getItem_name());
+                            updatedCount++;
+                        }
+                    }
+                }
+
+                // Be polite to the server and wait before the next request
+                Thread.sleep(50);
+
+            } catch (Exception e) {
+                System.err.println("  -> FAILED to update image for '" + item.getItem_name() + "': " + e.getMessage());
+            }
+        }
+        System.out.println("[UpdateService] Image update process finished. " + updatedCount + " of " + allItems.size() + " items updated.");
+    }
 
 
 }

@@ -171,8 +171,12 @@ public class ContentAnalysis {
                 String base_name = nameElement.text();
                 String item_name = getItemName(base_name);
 
-                Element image = doc.select("img.fotorama__img").first();
-                String image_link = (image != null) ? image.attr("abs:src") : "default-image.jpg";
+                Element imageMetaTag = doc.selectFirst("meta[property=og:image]");
+                String image_link = "default-image.jpg"; // Default value
+                if (imageMetaTag != null) {
+                    // Get the URL from the "content" attribute of the meta tag
+                    image_link = imageMetaTag.attr("content");
+                }
 
                 // --- 2. Create Item (if it doesn't exist) ---
                 if (!itemsRepository.existsByBase_name(base_name)) {
